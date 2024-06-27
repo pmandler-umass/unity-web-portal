@@ -1,17 +1,19 @@
 $(document).ready(setNav);
 $(window).resize(setNav);
 
+// Handles some navigation and button clicks
+
 function setNav() {
-  if ($("button.hamburger").is(":visible")) {
-    $("nav.mainNav").hide();  // Mobile View
+  if ($('button.hamburger').is(':visible')) {
+    $('nav.mainNav').hide(); // Mobile View
   } else {
-    $("nav.mainNav").show();  // Desktop View
+    $('nav.mainNav').show(); // Desktop View
   }
 }
 
-$("button.hamburger").on("click", function () {
-  var mainNav = $("nav.mainNav");
-  if (mainNav.is(":visible")) {
+$('button.hamburger').on('click', function () {
+  var mainNav = $('nav.mainNav');
+  if (mainNav.is(':visible')) {
     mainNav.fadeOut(100);
   } else {
     mainNav.fadeIn(100);
@@ -19,8 +21,11 @@ $("button.hamburger").on("click", function () {
 });
 
 $(window).click(function (e) {
-  if (!$(e.target).parent().hasClass("hamburger") && $("button.hamburger").is(":visible")) {
-    $("nav.mainNav").fadeOut(100);
+  if (
+    !$(e.target).parent().hasClass('hamburger') &&
+    $('button.hamburger').is(':visible')
+  ) {
+    $('nav.mainNav').fadeOut(100);
   }
 });
 
@@ -35,7 +40,7 @@ if (url.lastIndexOf('/') >= 0) {
 }
 
 $('nav.mainNav a').each(function () {
-  var href = $(this).attr("href");
+  var href = $(this).attr('href');
 
   if (href.lastIndexOf('.') >= 0) {
     href = href.substring(0, href.lastIndexOf('.'));
@@ -46,30 +51,33 @@ $('nav.mainNav a').each(function () {
   }
 
   if (url.indexOf(href) == 0) {
-    $(this).addClass("active");
+    $(this).addClass('active');
   }
-})
+});
 
 /**
  * btnDropdown Click Events
  */
-$("div.btnDropdown > button").click(function () {
-  $("div.btnDropdown > div").toggle();
+$('div.btnDropdown > button').click(function () {
+  $('div.btnDropdown > div').toggle();
 });
 
 $(window).click(function (e) {
-  if (!e.target.matches("div.btnDropdown > button")) {
-    $("div.btnDropdown > div").hide();
+  if (!e.target.matches('div.btnDropdown > button')) {
+    $('div.btnDropdown > div').hide();
   }
 });
 
 function downloadFile(text, filename) {
   var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute(
+    'href',
+    'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+  );
   element.setAttribute('download', filename);
 
-  element.style.display = "none";
-  $("body").append(element);
+  element.style.display = 'none';
+  $('body').append(element);
   element.click();
   element.remove();
 }

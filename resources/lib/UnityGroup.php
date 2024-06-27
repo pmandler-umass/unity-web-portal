@@ -6,6 +6,7 @@ use Exception;
 
 /**
  * Class that represents a single PI group in the Unity Cluster.
+ * A PI can only create one UnityGroup.
  */
 class UnityGroup
 {
@@ -14,14 +15,14 @@ class UnityGroup
     private $pi_uid;
 
     // Services
-    private $LDAP;
-    private $SQL;
+    private $LDAP;  // approved accounts, groups etc
+    private $SQL;   // requests
     private $MAILER;
     private $WEBHOOK;
-    private $REDIS;
+    private $REDIS; // local memory database
 
     /**
-     * Constructor for the object
+     * Constructor for a UnityGroup object
      *
      * @param string $pi_uid PI UID in the format <PI_PREFIX><OWNER_UID>
      * @param LDAP $LDAP LDAP Connection
@@ -62,7 +63,7 @@ class UnityGroup
      *
      * @return bool true if yes, false if no
      */
-    public function exists()
+    public function existsInLDAP()
     {
         return $this->getLDAPPiGroup()->exists();
     }
@@ -71,7 +72,7 @@ class UnityGroup
     // Portal-facing methods, these are the methods called by scripts in webroot
     //
 
-    public function requestGroup($send_mail_to_admins, $send_mail = true)
+    public function requestGroup($email_admins, $send_mail = true)
     {
         // check for edge cases...
         if ($this->exists()) {
@@ -102,7 +103,7 @@ class UnityGroup
                 )
             );
 
-            if ($send_mail_to_admins) {
+            if ($email_admins) {
                 $this->MAILER->sendMail(
                     "admin",
                     "group_request_admin",

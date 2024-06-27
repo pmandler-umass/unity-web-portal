@@ -2,6 +2,10 @@
 
 require_once "../resources/autoload.php";
 
+/**
+I'm not sure if this clears the cach, but it does pull all the User, Group and Org info
+from LDAP and puts it in the cache.
+*/
 // Get Users
 $users = $LDAP->getAllUsers($SQL, $MAILER, $REDIS, $WEBHOOK, true);
 
@@ -9,8 +13,9 @@ $sorted_uids = array();
 
 foreach ($users as $user) {
     $uid = $user->getUID();
+    # add user ID to sort_uids
     array_push($sorted_uids, $uid);
-
+    # in this 'cache' add all info associated with this user
     $REDIS->setCache($uid, "firstname", $user->getFirstname(true));
     $REDIS->setCache($uid, "lastname", $user->getLastname(true));
     $REDIS->setCache($uid, "org", $user->getOrg(true));
@@ -24,7 +29,7 @@ foreach ($users as $user) {
     foreach ($user->getGroups(true) as $cur_group) {
         array_push($parsed_groups, $cur_group->getPIUID());
     }
-
+    $ and all the groups this user belongs to
     $REDIS->setCache($uid, "groups", $parsed_groups);
 }
 
